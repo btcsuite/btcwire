@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 	"github.com/davecgh/go-spew/spew"
 )
 
@@ -126,8 +126,8 @@ func TestElementWire(t *testing.T) {
 			[]byte{0x01, 0x00, 0x00, 0x00},
 		},
 		{
-			btcwire.BitcoinNet(btcwire.MainNet),
-			[]byte{0xf9, 0xbe, 0xb4, 0xd9},
+			btcwire.BitcoinNet(btcwire.TestNet),
+			[]byte{0xb3, 0xc7, 0x25, 0x9a},
 		},
 		// Type not supported by the "fast" path and requires reflection.
 		{
@@ -213,7 +213,7 @@ func TestElementWireErrors(t *testing.T) {
 		},
 		{btcwire.ServiceFlag(btcwire.SFNodeNetwork), 0, io.ErrShortWrite, io.EOF},
 		{btcwire.InvType(btcwire.InvTypeTx), 0, io.ErrShortWrite, io.EOF},
-		{btcwire.BitcoinNet(btcwire.MainNet), 0, io.ErrShortWrite, io.EOF},
+		{btcwire.BitcoinNet(btcwire.TestNet), 0, io.ErrShortWrite, io.EOF},
 	}
 
 	t.Logf("Running %d tests", len(tests))

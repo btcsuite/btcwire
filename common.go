@@ -105,6 +105,14 @@ func readElement(r io.Reader, element interface{}) error {
 		}
 		return nil
 
+	// Signature.
+	case *[65]byte:
+		_, err := io.ReadFull(r, e[:])
+		if err != nil {
+			return err
+		}
+		return nil
+
 	case *ServiceFlag:
 		b := scratch[0:8]
 		_, err := io.ReadFull(r, b)
@@ -249,6 +257,14 @@ func writeElement(w io.Writer, element interface{}) error {
 		return nil
 
 	case *ShaHash:
+		_, err := w.Write(e[:])
+		if err != nil {
+			return err
+		}
+		return nil
+
+	// Signature.
+	case [65]byte:
 		_, err := w.Write(e[:])
 		if err != nil {
 			return err

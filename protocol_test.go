@@ -7,7 +7,7 @@ package btcwire_test
 import (
 	"testing"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 )
 
 // TestServiceFlagStringer tests the stringized output for service flag types.
@@ -38,10 +38,7 @@ func TestBitcoinNetStringer(t *testing.T) {
 		in   btcwire.BitcoinNet
 		want string
 	}{
-		{btcwire.MainNet, "MainNet"},
-		{btcwire.TestNet, "TestNet"},
-		{btcwire.TestNet3, "TestNet3"},
-		{btcwire.SimNet, "SimNet"},
+		{btcwire.TestNet, "GemTestNet"},
 		{0xffffffff, "Unknown BitcoinNet (4294967295)"},
 	}
 

@@ -17,6 +17,15 @@ import (
 // backing array multiple times.
 const defaultTransactionAlloc = 2048
 
+// defaultTransactionAlloc is the default size used for the backing array
+// for actions.  The action array will dynamically grow as needed, but
+// this figure is intended to provide enough space for the number of
+// actions in the vast majority of blocks without needing to grow the
+// backing array multiple times.
+// We're starting off small for now, but will need to bump this as the
+// network grows.
+const defaultActionAlloc = 16
+
 // MaxBlocksPerMsg is the maximum number of blocks allowed per message.
 const MaxBlocksPerMsg = 500
 
@@ -26,6 +35,10 @@ const MaxBlockPayload = 1000000 // Not actually 1MB which would be 1024 * 1024
 // maxTxPerBlock is the maximum number of transactions that could
 // possibly fit into a block.
 const maxTxPerBlock = (MaxBlockPayload / minTxPayload) + 1
+
+// maxTxPerBlock is the maximum number of transactions that could
+// possibly fit into a block.
+const maxActionsPerBlock = (MaxBlockPayload / minActionPayload) + 1
 
 // TxLoc holds locator data for the offset and length of where a transaction is
 // located within a MsgBlock data buffer.
@@ -40,13 +53,13 @@ type TxLoc struct {
 type MsgBlock struct {
 	Header       BlockHeader
 	Transactions []*MsgTx
+	Actions      []*MsgAction
 }
 
 // AddTransaction adds a transaction to the message.
 func (msg *MsgBlock) AddTransaction(tx *MsgTx) error {
 	msg.Transactions = append(msg.Transactions, tx)
 	return nil
-
 }
 
 // ClearTransactions removes all transactions from the message.
@@ -86,6 +99,21 @@ func (msg *MsgBlock) BtcDecode(r io.Reader, pver uint32) error {
 			return err
 		}
 		msg.Transactions = append(msg.Transactions, &tx)
+	}
+
+	actionCount, err := readVarInt(r, pver)
+	if err != nil {
+		return err
+	}
+
+	msg.Actions = make([]*MsgAction, 0, actionCount)
+	for i := uint64(0); i < actionCount; i++ {
+		action := MsgAction{}
+		err := action.BtcDecode(r, pver)
+		if err != nil {
+			return err
+		}
+		msg.Actions = append(msg.Actions, &action)
 	}
 
 	return nil
@@ -150,6 +178,21 @@ func (msg *MsgBlock) DeserializeTxLoc(r *bytes.Buffer) ([]TxLoc, error) {
 		txLocs[i].TxLen = (fullLen - r.Len()) - txLocs[i].TxStart
 	}
 
+	actionCount, err := readVarInt(r, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	msg.Actions = make([]*MsgAction, 0, actionCount)
+	for i := uint64(0); i < actionCount; i++ {
+		action := MsgAction{}
+		err := action.BtcDecode(r, 0)
+		if err != nil {
+			return nil, err
+		}
+		msg.Actions = append(msg.Actions, &action)
+	}
+
 	return txLocs, nil
 }
 
@@ -170,6 +213,19 @@ func (msg *MsgBlock) BtcEncode(w io.Writer, pver uint32) error {
 
 	for _, tx := range msg.Transactions {
 		err = tx.BtcEncode(w, pver)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = writeVarInt(w, pver, uint64(len(msg.Actions)))
+
+	if err != nil {
+		return err
+	}
+
+	for _, action := range msg.Actions {
+		err = action.BtcEncode(w, pver)
 		if err != nil {
 			return err
 		}
@@ -203,6 +259,13 @@ func (msg *MsgBlock) SerializeSize() int {
 
 	for _, tx := range msg.Transactions {
 		n += tx.SerializeSize()
+	}
+
+	// Add in the number of bytes for the actions (and the size of the length).
+	n += VarIntSerializeSize(uint64(len(msg.Actions)))
+
+	for _, action := range msg.Actions {
+		n += action.SerializeSize()
 	}
 
 	return n
@@ -246,5 +309,6 @@ func NewMsgBlock(blockHeader *BlockHeader) *MsgBlock {
 	return &MsgBlock{
 		Header:       *blockHeader,
 		Transactions: make([]*MsgTx, 0, defaultTransactionAlloc),
+		Actions:      make([]*MsgAction, 0, defaultActionAlloc),
 	}
 }

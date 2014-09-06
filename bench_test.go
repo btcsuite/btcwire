@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 )
 
 // genesisCoinbaseTx is the coinbase transaction for the genesis blocks for

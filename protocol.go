@@ -12,7 +12,7 @@ import (
 
 const (
 	// ProtocolVersion is the latest protocol version this package supports.
-	ProtocolVersion uint32 = 70002
+	ProtocolVersion uint32 = 70003
 
 	// MultipleAddressVersion is the protocol version which added multiple
 	// addresses per message (pver >= MultipleAddressVersion).
@@ -86,26 +86,14 @@ type BitcoinNet uint32
 // this package does not provide that functionality since it's generally a
 // better idea to simply disconnect clients that are misbehaving over TCP.
 const (
-	// MainNet represents the main bitcoin network.
-	MainNet BitcoinNet = 0xd9b4bef9
-
-	// TestNet represents the regression test network.
-	TestNet BitcoinNet = 0xdab5bffa
-
-	// TestNet3 represents the test network (version 3).
-	TestNet3 BitcoinNet = 0x0709110b
-
-	// SimNet represents the simulation test network.
-	SimNet BitcoinNet = 0x12141c16
+	// TestNet represents the Playcoin test network.
+	TestNet BitcoinNet = 0x9a25c7b3
 )
 
 // bnStrings is a map of bitcoin networks back to their constant names for
 // pretty printing.
 var bnStrings = map[BitcoinNet]string{
-	MainNet:  "MainNet",
-	TestNet:  "TestNet",
-	TestNet3: "TestNet3",
-	SimNet:   "SimNet",
+	TestNet: "GemTestNet",
 }
 
 // String returns the BitcoinNet in human-readable form.

@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 	"github.com/davecgh/go-spew/spew"
 )
 
@@ -83,27 +83,27 @@ func TestMessage(t *testing.T) {
 		btcnet btcwire.BitcoinNet // Network to use for wire encoding
 		bytes  int                // Expected num bytes read/written
 	}{
-		{msgVersion, msgVersion, pver, btcwire.MainNet, 125},
-		{msgVerack, msgVerack, pver, btcwire.MainNet, 24},
-		{msgGetAddr, msgGetAddr, pver, btcwire.MainNet, 24},
-		{msgAddr, msgAddr, pver, btcwire.MainNet, 25},
-		{msgGetBlocks, msgGetBlocks, pver, btcwire.MainNet, 61},
-		{msgBlock, msgBlock, pver, btcwire.MainNet, 239},
-		{msgInv, msgInv, pver, btcwire.MainNet, 25},
-		{msgGetData, msgGetData, pver, btcwire.MainNet, 25},
-		{msgNotFound, msgNotFound, pver, btcwire.MainNet, 25},
-		{msgTx, msgTx, pver, btcwire.MainNet, 34},
-		{msgPing, msgPing, pver, btcwire.MainNet, 32},
-		{msgPong, msgPong, pver, btcwire.MainNet, 32},
-		{msgGetHeaders, msgGetHeaders, pver, btcwire.MainNet, 61},
-		{msgHeaders, msgHeaders, pver, btcwire.MainNet, 25},
-		{msgAlert, msgAlert, pver, btcwire.MainNet, 42},
-		{msgMemPool, msgMemPool, pver, btcwire.MainNet, 24},
-		{msgFilterAdd, msgFilterAdd, pver, btcwire.MainNet, 26},
-		{msgFilterClear, msgFilterClear, pver, btcwire.MainNet, 24},
-		{msgFilterLoad, msgFilterLoad, pver, btcwire.MainNet, 35},
-		{msgMerkleBlock, msgMerkleBlock, pver, btcwire.MainNet, 110},
-		{msgReject, msgReject, pver, btcwire.MainNet, 79},
+		{msgVersion, msgVersion, pver, btcwire.TestNet, 125},
+		{msgVerack, msgVerack, pver, btcwire.TestNet, 24},
+		{msgGetAddr, msgGetAddr, pver, btcwire.TestNet, 24},
+		{msgAddr, msgAddr, pver, btcwire.TestNet, 25},
+		{msgGetBlocks, msgGetBlocks, pver, btcwire.TestNet, 61},
+		{msgBlock, msgBlock, pver, btcwire.TestNet, 240},
+		{msgInv, msgInv, pver, btcwire.TestNet, 25},
+		{msgGetData, msgGetData, pver, btcwire.TestNet, 25},
+		{msgNotFound, msgNotFound, pver, btcwire.TestNet, 25},
+		{msgTx, msgTx, pver, btcwire.TestNet, 34},
+		{msgPing, msgPing, pver, btcwire.TestNet, 32},
+		{msgPong, msgPong, pver, btcwire.TestNet, 32},
+		{msgGetHeaders, msgGetHeaders, pver, btcwire.TestNet, 61},
+		{msgHeaders, msgHeaders, pver, btcwire.TestNet, 25},
+		{msgAlert, msgAlert, pver, btcwire.TestNet, 42},
+		{msgMemPool, msgMemPool, pver, btcwire.TestNet, 24},
+		{msgFilterAdd, msgFilterAdd, pver, btcwire.TestNet, 26},
+		{msgFilterClear, msgFilterClear, pver, btcwire.TestNet, 24},
+		{msgFilterLoad, msgFilterLoad, pver, btcwire.TestNet, 35},
+		{msgMerkleBlock, msgMerkleBlock, pver, btcwire.TestNet, 110},
+		{msgReject, msgReject, pver, btcwire.TestNet, 79},
 	}
 
 	t.Logf("Running %d tests", len(tests))
@@ -175,7 +175,7 @@ func TestMessage(t *testing.T) {
 // concrete messages to confirm error paths work correctly.
 func TestReadMessageWireErrors(t *testing.T) {
 	pver := btcwire.ProtocolVersion
-	btcnet := btcwire.MainNet
+	btcnet := btcwire.TestNet
 
 	// Ensure message errors are as expected with no function specified.
 	wantErr := "something bad happened"
@@ -194,7 +194,7 @@ func TestReadMessageWireErrors(t *testing.T) {
 	}
 
 	// Wire encoded bytes for main and testnet3 networks magic identifiers.
-	testNet3Bytes := makeHeader(btcwire.TestNet3, "", 0, 0)
+	testNet3Bytes := makeHeader(btcwire.TestNet, "", 0, 0)
 
 	// Wire encoded bytes for a message that exceeds max overall message
 	// length.
@@ -377,7 +377,7 @@ func TestReadMessageWireErrors(t *testing.T) {
 // concrete messages to confirm error paths work correctly.
 func TestWriteMessageWireErrors(t *testing.T) {
 	pver := btcwire.ProtocolVersion
-	btcnet := btcwire.MainNet
+	btcnet := btcwire.TestNet
 	btcwireErr := &btcwire.MessageError{}
 
 	// Fake message with a command that is too long.
