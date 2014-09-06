@@ -460,8 +460,8 @@ func TestBlockSerializeSize(t *testing.T) {
 		in   *btcwire.MsgBlock // Block to encode
 		size int               // Expected serialized size
 	}{
-		// Block with no transactions.
-		{noTxBlock, 81},
+		// Block with no transactions or actions.
+		{noTxBlock, 82},
 
 		// First block in the mainnet block chain.
 		{&blockOne, len(blockOneBytes)},
@@ -534,6 +534,7 @@ var blockOne = btcwire.MsgBlock{
 			LockTime: 0,
 		},
 	},
+	Actions: []*btcwire.MsgAction{},
 }
 
 // Block one serialized bytes.
@@ -576,6 +577,7 @@ var blockOneBytes = []byte{
 	0xee,                   // 65-byte uncompressed public key
 	0xac,                   // OP_CHECKSIG
 	0x00, 0x00, 0x00, 0x00, // Lock time
+	0x00, // no actions
 }
 
 // Transaction location information for block one transactions.

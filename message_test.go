@@ -88,7 +88,7 @@ func TestMessage(t *testing.T) {
 		{msgGetAddr, msgGetAddr, pver, btcwire.TestNet, 24},
 		{msgAddr, msgAddr, pver, btcwire.TestNet, 25},
 		{msgGetBlocks, msgGetBlocks, pver, btcwire.TestNet, 61},
-		{msgBlock, msgBlock, pver, btcwire.TestNet, 239},
+		{msgBlock, msgBlock, pver, btcwire.TestNet, 240},
 		{msgInv, msgInv, pver, btcwire.TestNet, 25},
 		{msgGetData, msgGetData, pver, btcwire.TestNet, 25},
 		{msgNotFound, msgNotFound, pver, btcwire.TestNet, 25},
