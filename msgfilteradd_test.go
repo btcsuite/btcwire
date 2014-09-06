@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 )
 
 // TestFilterAddLatest tests the MsgFilterAdd API against the latest protocol

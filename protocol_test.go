@@ -7,7 +7,7 @@ package btcwire_test
 import (
 	"testing"
 
-	"github.com/conformal/btcwire"
+	"github.com/GameScrypt/btcwire"
 )
 
 // TestServiceFlagStringer tests the stringized output for service flag types.
