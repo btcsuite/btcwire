@@ -40,6 +40,7 @@ type TxLoc struct {
 type MsgBlock struct {
 	Header       BlockHeader
 	Transactions []*MsgTx
+	Actions      []*MsgAction
 }
 
 // AddTransaction adds a transaction to the message.
